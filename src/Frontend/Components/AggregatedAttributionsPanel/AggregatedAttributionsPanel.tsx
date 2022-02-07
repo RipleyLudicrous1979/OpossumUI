@@ -21,7 +21,7 @@ import {
   getSelectedResourceId,
 } from '../../state/selectors/audit-view-resource-selectors';
 import { ResourceDetailsTabsWorkers } from '../ResourceDetailsTabs/get-new-accordion-worker';
-import { isIdOfResourceWithChildren } from '../../util/can-have-children';
+import { isIdOfResourceWithChildren } from '../../util/can-resource-have-children';
 import { AttributionIdWithCount } from '../../../shared/shared-types';
 import { SyncAccordionPanel } from './SyncAccordionPanel';
 
