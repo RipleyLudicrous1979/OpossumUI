@@ -3,22 +3,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { getPanelData } from './resource-details-tabs-helpers';
+import { getContainedExternalPackages } from './resource-details-tabs-helpers';
 
 self.onmessage = ({
-  data: {
+  data: { selectedResourceId, externalData, resolvedExternalAttributions },
+}): void => {
+  const output = getContainedExternalPackages({
     selectedResourceId,
-    manualData,
     externalData,
     resolvedExternalAttributions,
-  },
-}): void => {
-  const output = getPanelData(
-    selectedResourceId,
-    manualData,
-    externalData,
-    resolvedExternalAttributions
-  );
+  });
 
   self.postMessage({
     output,

@@ -3,6 +3,22 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export function getNewAccordionWorker(): Worker {
-  throw new Error('JEST-MOCK-GET-NEW-ACCORDION-WORKER');
+export function getNewContainedExternalAttributionsAccordionWorker(): Worker {
+  return {
+    postMessage: () => {
+      throw new Error(
+        'JEST-MOCK-GET-NEW-CONTAINED-EXTERNAL-ATTRIBUTIONS-ACCORDION-WORKER'
+      );
+    },
+  } as unknown as Worker;
+}
+
+export function getNewContainedManualAttributionsAccordionWorker(): Worker {
+  return {
+    postMessage: () => {
+      throw new Error(
+        'JEST-MOCK-GET-NEW-CONTAINED-MANUAL-ATTRIBUTIONS-ACCORDION-WORKER'
+      );
+    },
+  } as unknown as Worker;
 }

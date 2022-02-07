@@ -40,19 +40,19 @@ export function getPanelData(
     panelData = panelData.concat([
       {
         title: PackagePanelTitle.ContainedExternalPackages,
-        attributionIdsWithCount: getContainedExternalPackages(
+        attributionIdsWithCount: getContainedExternalPackages({
           selectedResourceId,
           externalData,
-          resolvedExternalAttributions
-        ),
+          resolvedExternalAttributions,
+        }),
         attributions: externalData.attributions,
       },
       {
         title: PackagePanelTitle.ContainedManualPackages,
-        attributionIdsWithCount: getContainedManualPackages(
+        attributionIdsWithCount: getContainedManualPackages({
           selectedResourceId,
-          manualData
-        ),
+          manualData,
+        }),
         attributions: manualData.attributions,
       },
     ]);
@@ -61,7 +61,7 @@ export function getPanelData(
   return panelData;
 }
 
-function getExternalAttributionIdsWithCount(
+export function getExternalAttributionIdsWithCount(
   attributionIds: Array<string>
 ): Array<AttributionIdWithCount> {
   return attributionIds.map((attributionId) => ({
@@ -69,36 +69,36 @@ function getExternalAttributionIdsWithCount(
   }));
 }
 
-function getContainedExternalPackages(
-  selectedResourceId: string,
-  externalData: AttributionData,
-  resolvedExternalAttributions: Set<string>
-): Array<AttributionIdWithCount> {
+export function getContainedExternalPackages(args: {
+  selectedResourceId: string;
+  externalData: AttributionData;
+  resolvedExternalAttributions: Set<string>;
+}): Array<AttributionIdWithCount> {
   const externalAttributedChildren = getAttributedChildren(
-    externalData.resourcesWithAttributedChildren,
-    selectedResourceId
+    args.externalData.resourcesWithAttributedChildren,
+    args.selectedResourceId
   );
 
   return computeAggregatedAttributionsFromChildren(
-    externalData.attributions,
-    externalData.resourcesToAttributions,
+    args.externalData.attributions,
+    args.externalData.resourcesToAttributions,
     externalAttributedChildren,
-    resolvedExternalAttributions
+    args.resolvedExternalAttributions
   );
 }
 
-function getContainedManualPackages(
-  selectedResourceId: string,
-  manualData: AttributionData
-): Array<AttributionIdWithCount> {
+export function getContainedManualPackages(args: {
+  selectedResourceId: string;
+  manualData: AttributionData;
+}): Array<AttributionIdWithCount> {
   const manualAttributedChildren = getAttributedChildren(
-    manualData.resourcesWithAttributedChildren,
-    selectedResourceId
+    args.manualData.resourcesWithAttributedChildren,
+    args.selectedResourceId
   );
 
   return computeAggregatedAttributionsFromChildren(
-    manualData.attributions,
-    manualData.resourcesToAttributions,
+    args.manualData.attributions,
+    args.manualData.resourcesToAttributions,
     manualAttributedChildren
   );
 }

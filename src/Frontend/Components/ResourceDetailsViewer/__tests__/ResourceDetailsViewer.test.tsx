@@ -30,8 +30,11 @@ import {
   expectValueNotInTextBox,
 } from '../../../test-helpers/attribution-column-test-helpers';
 import { clickOnTab } from '../../../test-helpers/package-panel-helpers';
-
-jest.mock('../../ResourceDetailsTabs/get-new-accordion-worker');
+import {
+  getNewContainedExternalAttributionsAccordionWorker,
+  getNewContainedManualAttributionsAccordionWorker,
+  ResourceDetailsTabsWorkers,
+} from '../../ResourceDetailsTabs/get-new-accordion-worker';
 
 const testExternalLicense = 'Computed attribution license.';
 const testExternalLicense2 = 'Other computed attribution license.';
@@ -76,6 +79,13 @@ function getTestTemporaryAndExternalStateWithParentAttribution(
 
 let originalIpcRenderer: IpcRenderer;
 
+const mockResourceDetailsTabsWorkers: ResourceDetailsTabsWorkers = {
+  containedExternalAttributionsAccordionWorker:
+    getNewContainedExternalAttributionsAccordionWorker(),
+  containedManualAttributionsAccordionWorker:
+    getNewContainedManualAttributionsAccordionWorker(),
+};
+
 describe('The ResourceDetailsViewer', () => {
   beforeAll(() => {
     originalIpcRenderer = global.window.ipcRenderer;
@@ -97,7 +107,11 @@ describe('The ResourceDetailsViewer', () => {
     const testTemporaryPackageInfo: PackageInfo = {
       packageName: 'jQuery',
     };
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
     store.dispatch(setSelectedResourceId('test_id'));
     store.dispatch(setTemporaryPackageInfo(testTemporaryPackageInfo));
 
@@ -121,7 +135,11 @@ describe('The ResourceDetailsViewer', () => {
           licenseName: 'MIT',
         },
       };
-      const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+      const { store } = renderComponentWithStore(
+        <ResourceDetailsViewer
+          resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+        />
+      );
       store.dispatch(
         loadFromFile(
           getParsedInputFileEnrichedWithTestData({
@@ -155,7 +173,11 @@ describe('The ResourceDetailsViewer', () => {
   );
 
   test('renders a ExternalPackageCard', () => {
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
     store.dispatch(setSelectedResourceId('/test_id'));
     const externalAttributions: Attributions = {
       uuid_1: {
@@ -185,7 +207,11 @@ describe('The ResourceDetailsViewer', () => {
   });
 
   test('renders Contained External Packages', () => {
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
     const externalAttributions: Attributions = {
       uuid_2: {
         packageName: 'JQuery',
@@ -228,7 +254,11 @@ describe('The ResourceDetailsViewer', () => {
       },
     };
     const resourcesToExternalAttributions = { '/test_id': ['uuid_2'] };
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
     store.dispatch(setSelectedResourceId('/test_id'));
     store.dispatch(
       loadFromFile(
@@ -303,7 +333,11 @@ describe('The ResourceDetailsViewer', () => {
     const resourcesToExternalAttributions: ResourcesToAttributions = {
       '/test_id': ['uuid_2'],
     };
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
     store.dispatch(setSelectedResourceId('/test_id'));
     store.dispatch(
       loadFromFile(
@@ -369,7 +403,11 @@ describe('The ResourceDetailsViewer', () => {
   });
 
   test('selects the manual package view after you added an external package', () => {
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
 
     const manualAttributions: Attributions = {
       uuid_1: testTemporaryPackageInfo,
@@ -442,7 +480,11 @@ describe('The ResourceDetailsViewer', () => {
   });
 
   test('shows parent attribution if child has no other attribution', () => {
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
     getTestTemporaryAndExternalStateWithParentAttribution(
       store,
       '/test_parent/test_child',
@@ -459,7 +501,11 @@ describe('The ResourceDetailsViewer', () => {
   });
 
   test('does not show parent attribution if child has another attribution', () => {
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
     getTestTemporaryAndExternalStateWithParentAttribution(
       store,
       '/test_parent/test_child_with_own_attr',
@@ -488,7 +534,11 @@ describe('The ResourceDetailsViewer', () => {
       fileWithoutAttribution: ['uuid_1'],
     };
     const manualPackagePanelLabel = `${testTemporaryPackageInfo.packageName}, ${testTemporaryPackageInfo.packageVersion}`;
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
     store.dispatch(
       loadFromFile(
         getParsedInputFileEnrichedWithTestData({
@@ -522,7 +572,11 @@ describe('The ResourceDetailsViewer', () => {
     const resourcesToManualAttributions: ResourcesToAttributions = {
       '/fileWithAttribution': ['uuid_1'],
     };
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
     store.dispatch(
       loadFromFile(
         getParsedInputFileEnrichedWithTestData({
@@ -551,7 +605,11 @@ describe('The ResourceDetailsViewer', () => {
     const resourcesToManualAttributions: ResourcesToAttributions = {
       '/folderWithAttribution/': ['uuid_1'],
     };
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
     store.dispatch(
       loadFromFile(
         getParsedInputFileEnrichedWithTestData({
@@ -572,7 +630,11 @@ describe('The ResourceDetailsViewer', () => {
   });
 
   test('hides the package info for attribution breakpoints unless a signal is selected', () => {
-    const { store } = renderComponentWithStore(<ResourceDetailsViewer />);
+    const { store } = renderComponentWithStore(
+      <ResourceDetailsViewer
+        resourceDetailsTabsWorkers={mockResourceDetailsTabsWorkers}
+      />
+    );
 
     const manualAttributions: Attributions = {};
     const resourcesToManualAttributions: ResourcesToAttributions = {};

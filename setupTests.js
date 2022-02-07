@@ -4,3 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 require('@testing-library/jest-dom/extend-expect');
+
+jest.mock(
+  './src/Frontend/Components/ResourceDetailsTabs/get-new-accordion-worker'
+);

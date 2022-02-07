@@ -4,9 +4,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-  ThemeProvider,
-  Theme,
   StyledEngineProvider,
+  Theme,
+  ThemeProvider,
 } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import React, { ReactElement } from 'react';
@@ -20,6 +20,11 @@ import { AuditView } from '../AuditView/AuditView';
 import { TopBar } from '../TopBar/TopBar';
 import { createTheme } from '@mui/material';
 import { useAppSelector } from '../../state/hooks';
+import {
+  getNewContainedExternalAttributionsAccordionWorker,
+  getNewContainedManualAttributionsAccordionWorker,
+  ResourceDetailsTabsWorkers,
+} from '../ResourceDetailsTabs/get-new-accordion-worker';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -71,10 +76,19 @@ const theme = createTheme({
 export function App(): ReactElement {
   const selectedView = useAppSelector(getSelectedView);
 
+  const resourceDetailsTabsWorkers: ResourceDetailsTabsWorkers = {
+    containedExternalAttributionsAccordionWorker:
+      getNewContainedExternalAttributionsAccordionWorker(),
+    containedManualAttributionsAccordionWorker:
+      getNewContainedManualAttributionsAccordionWorker(),
+  };
+
   function getSelectedViewContainer(): ReactElement {
     switch (selectedView) {
       case View.Audit:
-        return <AuditView />;
+        return (
+          <AuditView resourceDetailsTabsWorkers={resourceDetailsTabsWorkers} />
+        );
       case View.Attribution:
         return <AttributionView />;
       case View.Report:
