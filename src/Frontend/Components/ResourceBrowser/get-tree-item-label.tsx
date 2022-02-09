@@ -62,6 +62,14 @@ export function getTreeItemLabel(
       )}
       isAttributionBreakpoint={isAttributionBreakpoint(nodeId)}
       showFolderIcon={canHaveChildren && !isFileWithChildren(nodeId)}
+      allChildrenhaveManualAttribution={
+        canHaveChildren &&
+        allChildrenhaveManualAttribution(
+          resource,
+          nodeId,
+          resourcesWithManualAttributedChildren
+        )
+      }
     />
   );
 }
@@ -150,5 +158,24 @@ function hasParentWithManualAttributionAndNoOwnAttribution(
       resourcesToManualAttributions,
       isAttributionBreakpoint
     ) && !hasManualAttribution(nodeId, resourcesToManualAttributions)
+  );
+}
+
+function allChildrenhaveManualAttribution(
+  resource: Resources,
+  nodeId: string,
+  resourcesWithManualAttributedChildren: ResourcesWithAttributedChildren
+): boolean {
+  const children = Object.keys(resource);
+  return (
+    resourcesWithManualAttributedChildren &&
+    children.every((child) => {
+      child = resource[child] !== 1 ? nodeId + child + '/' : nodeId + child;
+      return (
+        (resourcesWithManualAttributedChildren[nodeId] &&
+          resourcesWithManualAttributedChildren[nodeId].has(child)) ||
+        child in resourcesWithManualAttributedChildren
+      );
+    })
   );
 }
